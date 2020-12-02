@@ -1,9 +1,10 @@
 const express = require('express');
 const app = express();
 const router = express.Router();
+const { port } = require('./src/config');
 
-app.use(require('./controllers')(router));
+app.use(require('./src/controllers')(router));
 
-app.listen(8000, () => {
-  console.log(`Example app listening at http://localhost:${8000}`)
+app.listen(port, () => {
+  console.log(`Listening at http://localhost:${port}`)
 });
