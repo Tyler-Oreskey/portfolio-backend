@@ -1,6 +1,5 @@
 const aws = require('../../aws');
 
-const { successHandler } = require('../../helpers/success');
 const { ErrorHandler } = require('../../helpers/error');
 
 module.exports = {
@@ -24,8 +23,8 @@ module.exports = {
         throw new ErrorHandler(400, 'Invalid message provided.');
       }
 
-      await aws.sendEmail();
-      return successHandler(res, 'Email Successfully Sent!');
+      await aws.sendEmail(req.body);
+      return res.status(200).json({ message: 'Email Sent.' });
     } catch (error) {
       next(error);
     }

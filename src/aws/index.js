@@ -7,6 +7,9 @@ AWS.config.update({
   region: config.region
 });
 
+const ses = new AWS.SES({ apiVersion: 'latest' });
+const s3 = new AWS.S3({ apiVersion: 'latest' });
+
 const sendEmail = async (body) => {
   const params = {
     Destination: {
@@ -31,8 +34,16 @@ const sendEmail = async (body) => {
     Source: config.emailDestination
   };
 
-  await new AWS.SES({ apiVersion: 'latest' })
-    .sendEmail(params).promise();
+  await ses.sendEmail(params).promise();
 };
 
-module.exports = { sendEmail };
+const getPDF = async (fileDefinition) => {
+  const params = {
+    Bucket: `${config.bucket}/${fileDefinition.s3Path}`,
+    Key: fileDefinition.fileName
+  };
+
+  return s3.getObject(params).promise();
+};
+
+module.exports = { sendEmail, getPDF };
