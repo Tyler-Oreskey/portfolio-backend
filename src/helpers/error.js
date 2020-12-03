@@ -17,7 +17,7 @@ class ErrorHandler extends Error {
       message = 'An Error Occurred!';
     }
 
-    res.status(statusCode, message).json({
+    return res.status(statusCode).json({
       status: 'error',
       statusCode,
       message

@@ -7,7 +7,7 @@ AWS.config.update({
   region: config.region
 });
 
-const sendEmail = async () => {
+const sendEmail = async (body) => {
   const params = {
     Destination: {
       ToAddresses: [config.emailDestination]
@@ -16,12 +16,12 @@ const sendEmail = async () => {
       Body: {
         Html: {
           Charset: "UTF-8",
-          Data: "HTML_FORMAT_BODY"
+          Data: `
+            <h4>Name: ${body.name}</h4>
+            <h4>Email: ${body.email}</h4>
+            <p>${body.message}</p>
+          `
         },
-        Text: {
-          Charset: "UTF-8",
-          Data: "TEXT_FORMAT_BODY"
-        }
       },
       Subject: {
         Charset: 'UTF-8',
