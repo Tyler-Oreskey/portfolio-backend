@@ -1,13 +1,15 @@
 const express = require('express');
 const app = express();
 const router = express.Router();
+const cors = require('cors');
 const bodyParser = require('body-parser');
-const { port } = require('./src/config');
+const config = require('./src/config');
 const { handleError } = require('./src/helpers/error');
 
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors({ origin: config.siteURL }));
 app.use(require('./src/controllers')(router));
 app.use((err, req, res, next) => handleError(err, res));
 
-app.listen(port, () => console.log(`Listening at http://localhost:${port}`));
+app.listen(config.port, () => console.log(`Listening at http://localhost:${config.port}`));
