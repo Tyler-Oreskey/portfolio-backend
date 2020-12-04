@@ -1,15 +1,25 @@
 const aws = require('../../aws');
 
 const { ErrorHandler } = require('../../helpers/error');
+const {validateRecaptchaToken } = require('../../auth/recaptcha');
 
 module.exports = {
   sendEmail: async (req, res, next) => {
-    try {
-      const { name, email, message } = req.body;
+    const { name, email, message, recaptchaToken } = req.body;
 
-      const validEmailRegex = RegExp(
-        /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
-      );
+    const validEmailRegex = RegExp(
+      /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+    );
+    try {
+
+      if (recaptchaToken === undefined || recaptchaToken === '') {
+        throw new ErrorHandler(400, 'Invalid token provided.');
+      }
+      const isHuman = await validateRecaptchaToken(recaptchaToken);
+
+      if (!isHuman) {
+        throw new ErrorHandler(400, 'You are not a human.');
+      }
     
       if (!name || name.length < 3) {
         throw new ErrorHandler(400, 'Invalid name provided.');
@@ -23,7 +33,9 @@ module.exports = {
         throw new ErrorHandler(400, 'Invalid message provided.');
       }
 
-      await aws.sendEmail(req.body);
+      const fields = { name, email, message };
+
+      await aws.sendEmail(fields);
       return res.status(200).json({ message: 'Email Sent.' });
     } catch (error) {
       next(error);
