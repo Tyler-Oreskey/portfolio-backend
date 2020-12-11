@@ -1,3 +1,3 @@
 # RUN IN DOCKER CONTAINER
-1. docker build -f Dockerfile.prod -t portfolio-site-backend .
+1. docker build -f Dockerfile.prod -t portfolio-site-backend:latest .
 2. docker run -p 80:8000 <image-id>
