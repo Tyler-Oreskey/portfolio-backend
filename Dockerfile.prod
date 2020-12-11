@@ -1,0 +1,6 @@
+FROM node:15.4.0-alpine3.10
+WORKDIR /app
+COPY . .
+RUN npm install
+EXPOSE 8000
+CMD ["node", "index.js", "daemon off;"]

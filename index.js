@@ -9,6 +9,7 @@ const { handleError } = require('./src/helpers/error');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors({ origin: config.siteURL }));
+app.get('/health', (req, res) => res.send("OK!"))
 app.use(require('./src/controllers')(router));
 app.use((err, req, res, next) => handleError(err, res));
 
