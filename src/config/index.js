@@ -8,6 +8,6 @@ module.exports = {
   domainEmail: process.env.DOMAIN_EMAIL || 'mail.toreskey.com',
   region: process.env.REGION || 'us-east-1',
   bucket: process.env.BUCKET || 'portfolio-site-resume',
-  siteURLs: process.env.SITE_URLS || 'http://localhost:3000',
+  siteURLs: process.env.SITE_URLS || 'localhost:3000',
   recaptchaSecret: process.env.RECAPTCHA_SECRET
 };

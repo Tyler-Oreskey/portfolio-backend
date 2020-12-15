@@ -7,10 +7,9 @@ const { ErrorHandler } = require('../../helpers/error');
 module.exports = {
   getPDF: async (req, res, next) => {
     try {
+      let resumeBuffer = getCacheItem('resume');
 
-      let resumeBlob = getCacheItem('resume');
-
-      if (resumeBlob === undefined) {
+      if (resumeBuffer === undefined) {
         const file = await getPDF({
           s3Path: 'pdf',
           fileName: 'resume.pdf',
@@ -20,10 +19,10 @@ module.exports = {
         if (file.Body === undefined || file.Body === '') {
           throw new ErrorHandler(404, 'File Buffer Not Found.');
         }
-        const blob = `data:application/pdf;base64,${Buffer.from(file.Body).toString('base64')}`;
-        resumeBlob = setCacheItem('resume', { blob }, 2592000);
+        const buffer = file.Body;
+        resumeBuffer = setCacheItem('resume', { buffer }, 2592000);
       }
-      return res.status(200).json(resumeBlob);
+      return res.status(200).json(resumeBuffer);
     } catch (error) {
       next(error);
     }
