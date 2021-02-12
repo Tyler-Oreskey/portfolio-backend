@@ -8,7 +8,6 @@ module.exports = {
   getPDF: async (req, res, next) => {
     try {
       let resumeBuffer = getCacheItem('resume');
-
       if (resumeBuffer === undefined) {
         const file = await getPDF({
           s3Path: 'pdf',
@@ -22,7 +21,7 @@ module.exports = {
         const buffer = file.Body;
         resumeBuffer = setCacheItem('resume', { buffer }, 2592000);
       }
-      return res.status(200).json(resumeBuffer);
+      return res.status(200).json({ message: "Downloaded!", resumeBuffer });
     } catch (error) {
       next(error);
     }
